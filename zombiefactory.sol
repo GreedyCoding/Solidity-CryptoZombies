@@ -1,9 +1,5 @@
-/*
-Source code should start with a "version pragma"
-Private and Internal functions arrays and variables should start with underscore
-
-*/
-
+//Source code should start with a "version pragma"
+//Private and Internal functions, arrays and variables should start with underscore
 pragma solidity ^0.4.19;
 
 //Base Contract
@@ -20,19 +16,19 @@ contract ZombieFactory {
         uint dna;
     }
 
-    /*
-    Creating an array for Zombie structs making it public and naming it zombies.
-    For a public Array Solidity will automatically create a getter method for it.
-    */
+    //Creating an array for Zombie structs making it public and naming it zombies
+    //For a public Array Solidity will automatically create a getter method for it
     Zombie[] public zombies;
 
-    mapping (uint => address) public zombieToOwner;
+    //Mapping the adress to a uint so you can look up the owner of the zombie
+    mapping (uint => address) public ZombieOwner;
+    //Mapping a uint to the adress so you can look up the ammount of zombies an adress has
     mapping (address => uint) ownerZombieCount;
 
     function _createZombie(string _name, uint _dna) internal {
-        //
+        //Using array index as ZombieID and pushing a new Zombie into the array
         uint id = zombies.push(Zombie(_name, _dna)) - 1;
-        zombieToOwner[id] = msg.sender;
+        ZombieOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
         NewZombie(id, _name, _dna);
     }
@@ -44,11 +40,9 @@ contract ZombieFactory {
     }
 
     function createRandomZombie(string _name) public {
-        /*
-        Message Sender Adress needs to have 0 zombies to be able to create a Zombie.
-        Generating DNA according to input string(not really Random)
-        */
+        //Message Sender Adress needs to have 0 zombies to be able to create a Zombie.
         require(ownerZombieCount[msg.sender] == 0);
+        //Generating DNA according to input string(not really random lol)
         uint randDna = _generateRandomDna(_name);
         randDna = randDna - randDna % 100;
         _createZombie(_name, randDna);
