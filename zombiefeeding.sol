@@ -25,6 +25,8 @@ contract ZombieFeeding is ZombieFactory {
   // Modify function definition here:
   function feedAndMultiply(uint _zombieId, uint _targetDna) public {
     require(msg.sender == zombieToOwner[_zombieId]);
+    //storage - written permanently to the blockchain
+    //memory - will disappear when the function call ends
     Zombie storage myZombie = zombies[_zombieId];
     _targetDna = _targetDna % dnaModulus;
     uint newDna = (myZombie.dna + _targetDna) / 2;
