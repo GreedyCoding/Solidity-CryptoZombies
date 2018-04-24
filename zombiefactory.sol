@@ -2,8 +2,11 @@
 //Private and Internal functions, arrays and variables should start with underscore
 pragma solidity ^0.4.19;
 
+//Adding onlyOwner and transferOwnership function to the Contract
+import "./ownable.sol";
+
 //Base Contract
-contract ZombieFactory {
+contract ZombieFactory is Ownable {
 
     event NewZombie(uint zombieId, string name, uint dna);
 
