@@ -12,11 +12,18 @@ contract ZombieFactory is Ownable {
 
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits; //10^dnaDigits
+    //Solidity contains time units: seconds, minutes, hours, days, weeks and years
+    //Convert to a uint according to seconds (1 seconds = 60)
+    uint cooldownTime = 1 days;
 
     //Basically an ES6 Class Object !does not have a constructor function
     struct Zombie {
         string name;
         uint dna;
+        //Solidity can minimize the required storage space by storing
+        //multiple uint32 in one uint256 if strung together
+        uint32 level;
+        uint32 readyTime;
     }
 
     //Creating an array for Zombie structs making it public and naming it zombies
@@ -29,8 +36,8 @@ contract ZombieFactory is Ownable {
     mapping (address => uint) ownerZombieCount;
 
     function _createZombie(string _name, uint _dna) internal {
-        //Using array index as ZombieID and pushing a new Zombie into the array
-        uint id = zombies.push(Zombie(_name, _dna)) - 1;
+        //push returns the number of items in the array. Using for ID
+        uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime))) - 1;
         ZombieOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
         NewZombie(id, _name, _dna);
