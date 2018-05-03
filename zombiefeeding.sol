@@ -22,6 +22,11 @@ contract ZombieFeeding is ZombieFactory {
 
   KittyInterface kittyContract;
 
+  modifier ownerOf(uint _zombieId){
+    require(msg.sender == zombieToOwner[_zombieId]);
+    _;
+  }
+
   function setKittyContractAddress(address _address) external onlyOwner {
     kittyContract = KittyInterface(_address);
   }
@@ -34,8 +39,7 @@ contract ZombieFeeding is ZombieFactory {
     return (_zombie.readyTime <= now);
   }
 
-  function feedAndMultiply(uint _zombieId, uint _targetDna, string _species) internal {
-    require(msg.sender == zombieToOwner[_zombieId]);
+  function feedAndMultiply(uint _zombieId, uint _targetDna, string _species) internal ownerOf(_zombieId){
     //storage - written permanently to the blockchain
     //memory - will disappear when the function call ends
     Zombie storage myZombie = zombies[_zombieId];
