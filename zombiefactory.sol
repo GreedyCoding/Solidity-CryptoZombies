@@ -24,6 +24,8 @@ contract ZombieFactory is Ownable {
         //multiple uint32 in one uint256 if strung together
         uint32 level;
         uint32 readyTime;
+        uint16 winCount;
+        uint16 lossCount;
     }
 
     //Creating an array for Zombie structs making it public and naming it zombies
@@ -37,7 +39,7 @@ contract ZombieFactory is Ownable {
 
     function _createZombie(string _name, uint _dna) internal {
         //push returns the number of items in the array. Using for ID
-        uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime))) - 1;
+        uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime), 0, 0)) - 1;
         ZombieOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
         NewZombie(id, _name, _dna);
